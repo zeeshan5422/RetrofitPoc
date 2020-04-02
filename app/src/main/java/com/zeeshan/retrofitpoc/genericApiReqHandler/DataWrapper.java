@@ -9,6 +9,7 @@ public class DataWrapper<T> {
     }
 
     public void setApiException(Exception apiException) {
+
         this.apiException = apiException;
     }
 

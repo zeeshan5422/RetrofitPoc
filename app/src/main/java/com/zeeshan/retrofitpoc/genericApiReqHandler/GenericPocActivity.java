@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.zeeshan.retrofitpoc.R;
@@ -40,11 +39,24 @@ public class GenericPocActivity extends AppCompatActivity {
 
         tv_res.setText("");
 
-        LiveData<DataWrapper<List<User>>> usersList = new UsersListApi().getUsersList();
-        usersList.observe(this, new Observer<DataWrapper<List<User>>>() {
+//        LiveData<DataWrapper<List<User>>> usersList = new UsersListApi().getUsersList();
+//        usersList.observe(this, new Observer<DataWrapper<List<User>>>() {
+//            @Override
+//            public void onChanged(DataWrapper<List<User>> listDataWrapper) {
+//                tv_res.setText(listDataWrapper.getData().toString());
+//            }
+//        });
+
+        new NetworkRepo<List<User>>().provideUsers().observe(this, new Observer<DataWrapper<List<User>>>() {
             @Override
             public void onChanged(DataWrapper<List<User>> listDataWrapper) {
-                tv_res.setText(listDataWrapper.getData().toString());
+                if (listDataWrapper.getData() != null) {
+                    tv_res.setText(listDataWrapper.getData().toString());
+                } else if (listDataWrapper.getApiException() != null) {
+                    tv_res.setText(listDataWrapper.getApiException().getLocalizedMessage());
+                }else{
+                    tv_res.setText("Unknown error occur!!!");
+                }
             }
         });
     }
